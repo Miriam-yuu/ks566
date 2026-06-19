@@ -20,6 +20,7 @@
         /* 左側欄：商品分類 */
         .sidebar { width: 260px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e0e0e0; height: fit-content; }
         .sidebar h3 { font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333; }
+        .sidebar-toggle { display: none; width: 100%; padding: 12px 16px; margin-bottom: 20px; text-align: left; border: 1px solid #ddd; border-radius: 8px; background: #f6f6f6; color: #333; font-weight: bold; cursor: pointer; }
         .menu-parent { font-weight: bold; margin-top: 15px; font-size: 16px; color: #222; cursor: pointer; position: relative; padding-right: 20px; }
         .menu-parent::after { content: '▾'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: #999; font-size: 14px; transition: transform 0.2s; }
         .menu-parent.collapsed::after { content: '▸'; transform: translateY(-50%); }
@@ -29,6 +30,7 @@
         .menu-child-list li { margin: 8px 0; }
         .menu-child-list a { color: #555; text-decoration: none; font-size: 14px; font-weight: normal; display: block; transition: 0.2s; }
         .menu-child-list a:hover, .menu-child-list a.active { color: #d4af37; font-weight: bold; }
+        .sidebar-collapsed { display: none !important; }
 
         /* 右側欄：商品主區塊 */
         .content-area { flex: 1; display: flex; flex-direction: column; gap: 20px; }
@@ -79,6 +81,21 @@
         /* 特別標註區塊 */
         .notice-box { margin-top: 15px; background: #fff9f0; border-left: 4px solid #ff9900; padding: 12px; border-radius: 0 8px 8px 0; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
         .notice-item { display: flex; align-items: center; gap: 6px; color: #d47a00; font-weight: bold; }
+        /* 行動版響應式 */
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; gap: 20px; padding: 0 10px; }
+            .sidebar-toggle { display: block; }
+            .sidebar { width: 100%; }
+            .content-area { width: 100%; }
+            .toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
+            .sort-select { width: 100%; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+        }
+        @media (max-width: 600px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .sidebar { padding: 15px; }
+            .sidebar-toggle { font-size: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -88,86 +105,24 @@
     </div>
 
     <div class="main-container">
-        
-        <aside class="sidebar">
-            <h3>商品分類</h3>
-            
-            <div class="menu-parent">1 獎牌</div>
-            <ul class="menu-child-list">
-                <li><a href="#" class="active">所有商品</a></li>
-                <li><a href="#">a07_琉璃木獎牌</a></li>
-                <li><a href="#">a13_彩印獎牌</a></li>
-                <li><a href="#">a15_浮雕組牌</a></li>
-            </ul>
-
-            <div class="menu-parent">2 獎盃</div>
-            <ul class="menu-child-list">
-                <li><a href="#">所有商品</a></li>
-                <li><a href="#">a31_鎏金雕塑盃</a></li>
-                <li><a href="#">a32_琉璃獎盃</a></li>
-            </ul>
-
-            <div class="menu-parent">3 藝品</div>
-            <ul class="menu-child-list">
-                <li><a href="#">所有商品</a></li>
-                <li><a href="#">a47_琉金雕塑</a></li>
-                <li><a href="#">a47k_琉金雕塑框</a></li>
-            </ul>
-
-            <div class="menu-parent">4 賀匾</div>
-            <ul class="menu-child-list">
-                <li><a href="#">所有商品</a></li>
-                <li><a href="#">a71_立體金箔畫s</a></li>
-                <li><a href="#">a73_立體金箔畫h</a></li>
-            </ul>
-        </aside>
+        <button class="sidebar-toggle" id="sidebarToggle" type="button">收起分類</button>
+        <aside class="sidebar" id="sidebar"><!-- 由 output.json 動態產生分類 --></aside>
 
         <main class="content-area">
-            
             <div class="toolbar">
                 <div class="category-title" id="category-title">所有商品</div>
-                <select class="sort-select">
+                <select class="sort-select" id="sortSelect">
                     <option value="default">預設排序</option>
                     <option value="price-low">價格由低到高</option>
                     <option value="price-high">價格由高到低</option>
                 </select>
             </div>
 
-            <div class="product-grid">
-                <div class="product-card" onclick="openModal('【a31】榮耀騰飛鎏金盃', 'NT$ 4,500', 'A31-001', 'SKU-9921', ['#鎏金', '#企業頒獎', '#高質感'])">
-                    <div class="img-container">
-                        <img src="https://placehold.co/400x400/e6e6e6/333333?text=a31+Trophy" alt="商品圖片">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">【a31】榮耀騰飛鎏金盃</div>
-                        <div class="product-price">NT$ 4,500</div>
-                    </div>
-                </div>
-
-                <div class="product-card" onclick="openModal('【a32】璀璨水晶琉璃獎盃', 'NT$ 2,800', 'A32-052', 'SKU-8832', ['#琉璃', '#學術獲獎'])">
-                    <div class="img-container">
-                        <img src="https://placehold.co/400x400/e6e6e6/333333?text=a32+Glass" alt="商品圖片">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">【a32】璀璨水晶琉璃獎盃</div>
-                        <div class="product-price">NT$ 2,800</div>
-                    </div>
-                </div>
-
-                <div class="product-card" onclick="openModal('【a47】馬到成功 琉金雕塑', 'NT$ 6,800', 'A47-109', 'SKU-7747', ['#琉金雕塑', '#開幕誌慶'])">
-                    <div class="img-container">
-                        <img src="https://placehold.co/400x400/e6e6e6/333333?text=a47+Sculpture" alt="商品圖片">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">【a47】馬到成功 琉金雕塑</div>
-                        <div class="product-price">NT$ 6,800</div>
-                    </div>
-                </div>
-            </div>
+            <div class="product-grid" id="productGrid"><!-- 由 output.json 動態產生商品卡片 --></div>
         </main>
     </div>
 
-    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+    <div class="modal-overlay" id="productModal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="document.getElementById('productModal').style.display='none'">&times;</span>
             
@@ -201,76 +156,143 @@
     </div>
 
     <script>
-        // 點擊商品卡片開啟彈窗並帶入資料
-        function openModal(name, price, model, sku, tags) {
-            document.getElementById('modalName').innerText = name;
-            document.getElementById('modalPrice').innerText = price;
-            document.getElementById('modalModel').innerText = model;
-            document.getElementById('modalSku').innerText = sku;
-            
-            // 動態產生標籤
+        // Modal open (name, priceText, model, sku, tags, imagePath)
+        function openModal(name, priceText, model, sku, tags, imagePath) {
+            document.getElementById('modalName').innerText = name || '';
+            document.getElementById('modalPrice').innerText = priceText || '';
+            document.getElementById('modalModel').innerText = model || '-';
+            document.getElementById('modalSku').innerText = sku || '-';
+
             const tagBox = document.getElementById('modalTags');
             tagBox.innerHTML = '';
-            tags.forEach(tag => {
+            (tags || []).forEach(tag => {
                 const span = document.createElement('span');
                 span.className = 'tag';
                 span.innerText = tag;
                 tagBox.appendChild(span);
             });
 
-            // 預設重設放大狀態，並動態抓取該卡片的圖片
             const container = document.getElementById('zoomContainer');
             container.classList.remove('zoomed');
             container.style.cursor = 'zoom-in';
-            
-            // 模擬抓取當前點擊的圖片
-            document.getElementById('modalImg').src = "https://placehold.co/600x600/e6e6e6/333333?text=" + encodeURIComponent(name);
-
-            // 顯示彈窗
+            document.getElementById('modalImg').src = imagePath || ("https://placehold.co/600x600/e6e6e6/333333?text=" + encodeURIComponent(name || ''));
             document.getElementById('productModal').style.display = 'flex';
         }
 
-        // 點擊背景關閉彈窗
-        function closeModal(event) {
-            document.getElementById('productModal').style.display = 'none';
-        }
-
-        // 單張大圖點擊放大/還原切換
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
         function toggleZoom() {
             const container = document.getElementById('zoomContainer');
             container.classList.toggle('zoomed');
-            if (container.classList.contains('zoomed')) {
-                container.style.cursor = 'zoom-out';
-            } else {
-                container.style.cursor = 'zoom-in';
-            }
+            container.style.cursor = container.classList.contains('zoomed') ? 'zoom-out' : 'zoom-in';
         }
 
-        // 左側選單切換效果 (模擬)
-        const menuLinks = document.querySelectorAll('.menu-child-list a');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                menuLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                
-                // 更新右側標題與麵包屑
-                const parentTitle = this.closest('.menu-child-list').previousElementSibling.innerText;
-                document.getElementById('category-title').innerText = this.innerText;
-                document.getElementById('breadcrumb').innerHTML = `<a href="#">首頁</a> &gt; <a href="#">${parentTitle}</a> &gt; ${this.innerText}`;
-            });
-        });
+        // 渲染與資料載入
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            if (!items || items.length === 0) { grid.innerHTML = '<div style="padding:20px;">沒有商品</div>'; return; }
+            items.forEach(item => {
+                const card = document.createElement('div'); card.className = 'product-card';
+                const imgContainer = document.createElement('div'); imgContainer.className = 'img-container';
+                const img = document.createElement('img');
+                img.src = item['圖片路徑'] || 'https://placehold.co/400x400/e6e6e6/333333?text=No+Image';
+                img.alt = item['名稱'] || '';
+                imgContainer.appendChild(img);
 
-        // 左側分類可折疊功能
-        const menuParents = document.querySelectorAll('.menu-parent');
-        menuParents.forEach(parent => {
-            parent.addEventListener('click', () => {
-                const childList = parent.nextElementSibling;
-                if (!childList || !childList.classList.contains('menu-child-list')) return;
-                childList.classList.toggle('collapsed');
-                parent.classList.toggle('collapsed');
+                const info = document.createElement('div'); info.className = 'product-info';
+                const name = document.createElement('div'); name.className = 'product-name'; name.innerText = item['名稱'] || item['型號'] || '';
+                const price = document.createElement('div'); price.className = 'product-price'; price.innerText = item['價格'] ? ('NT$ ' + item['價格']) : '-';
+                info.appendChild(name); info.appendChild(price);
+
+                card.appendChild(imgContainer); card.appendChild(info);
+                card.addEventListener('click', () => {
+                    openModal(item['名稱'], 'NT$ ' + (item['價格']||''), item['型號'], item['編號'], [], item['圖片路徑']);
+                });
+
+                grid.appendChild(card);
             });
-        });
+        }
+
+        // 讀取 output.json 並建立側欄與事件
+        fetch('output.json').then(r => r.json()).then(data => {
+            window.catalog = data;
+            const sidebar = document.getElementById('sidebar');
+            sidebar.innerHTML = '<h3>商品分類</h3>';
+
+            // 建立 parent -> unique children
+            const parents = Object.keys(data || {});
+            let firstLink = null;
+            parents.forEach(parent => {
+                const parentDiv = document.createElement('div'); parentDiv.className = 'menu-parent'; parentDiv.innerText = parent;
+                const ul = document.createElement('ul'); ul.className = 'menu-child-list';
+
+                const childSet = new Set((data[parent] || []).map(i => i['小分類'] || '所有商品'));
+                // 預設第一項為「所有商品」
+                const liAll = document.createElement('li');
+                const aAll = document.createElement('a'); aAll.href='#'; aAll.innerText = '所有商品'; aAll.dataset.parent = parent; aAll.dataset.child = '';
+                liAll.appendChild(aAll); ul.appendChild(liAll);
+                if (!firstLink) firstLink = aAll;
+
+                Array.from(childSet).forEach(child => {
+                    if (!child) return;
+                    const li = document.createElement('li'); const a = document.createElement('a'); a.href = '#'; a.innerText = child; a.dataset.parent = parent; a.dataset.child = child;
+                    li.appendChild(a); ul.appendChild(li);
+                    if (!firstLink) firstLink = a;
+                });
+
+                sidebar.appendChild(parentDiv); sidebar.appendChild(ul);
+            });
+
+            // 事件：子分類點擊
+            sidebar.querySelectorAll('.menu-child-list a').forEach(a => {
+                a.addEventListener('click', e => {
+                    e.preventDefault();
+                    sidebar.querySelectorAll('.menu-child-list a').forEach(x => x.classList.remove('active'));
+                    a.classList.add('active');
+                    const parent = a.dataset.parent; const child = a.dataset.child;
+                    document.getElementById('category-title').innerText = a.innerText;
+                    document.getElementById('breadcrumb').innerHTML = `<a href="#">首頁</a> &gt; <a href="#">${parent}</a> &gt; ${a.innerText}`;
+                    let items = (data[parent] || []).slice();
+                    if (child) items = items.filter(it => it['小分類'] === child);
+                    // 排序選項
+                    const sort = document.getElementById('sortSelect').value;
+                    if (sort === 'price-low') items.sort((a,b)=> (a['價格']||0) - (b['價格']||0));
+                    if (sort === 'price-high') items.sort((a,b)=> (b['價格']||0) - (a['價格']||0));
+                    renderProducts(items);
+                });
+            });
+
+            // 父分類點擊收合
+            sidebar.querySelectorAll('.menu-parent').forEach(parentEl => {
+                parentEl.addEventListener('click', () => {
+                    const child = parentEl.nextElementSibling; if (!child) return;
+                    child.classList.toggle('collapsed'); parentEl.classList.toggle('collapsed');
+                });
+            });
+
+            // 初始顯示第一個分類的所有商品
+            if (firstLink) firstLink.click();
+
+            // 排序改變時重新套用目前分類
+            const sortSelect = document.getElementById('sortSelect');
+            sortSelect.addEventListener('change', () => {
+                const active = sidebar.querySelector('.menu-child-list a.active');
+                if (active) active.click(); else if (firstLink) firstLink.click();
+            });
+        }).catch(err => { console.error('讀取 output.json 錯誤', err); });
+
+        // 側邊欄整體收合（立即綁定）
+        (function(){
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebarToggle || !sidebar) return;
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('sidebar-collapsed');
+                const collapsed = sidebar.classList.contains('sidebar-collapsed');
+                sidebarToggle.innerText = collapsed ? '展開分類' : '收起分類';
+            });
+            if (window.innerWidth <= 900) { sidebar.classList.add('sidebar-collapsed'); sidebarToggle.innerText = '展開分類'; }
+        })();
     </script>
 </body>
 </html>
